@@ -9,8 +9,23 @@ const getSale = asyncHandler( async(req,res) => {
 
 //POST
 const createSale = asyncHandler(async (req, res) => {
-  const { product, amount, totalPrice } = req.body;
-  const sale = await Sale.create({ product, amount, totalPrice });
+  const { name, address, items } = req.body;
+  if (!name || !address || !items || !items.length) {
+    res.status(400);
+    throw new Error('Datos de venta incompletos');
+  }
+
+  // Calculate total price server-side
+  const totalPrice = items.reduce((sum, i) => sum + i.price * i.qty, 0);
+
+  // Create sale document
+  const sale = await Sale.create({
+    customerName: name,
+    shippingAddress: address,
+    items,
+    totalPrice
+  });
+
   res.status(201).json(sale);
 });
 

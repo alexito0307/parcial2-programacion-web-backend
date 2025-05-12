@@ -1,18 +1,30 @@
 const mongoose = require('mongoose');
 
+const itemSchema = mongoose.Schema({
+  productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+  name: { type: String, required: true },
+  price: { type: Number, required: true },
+  qty: { type: Number, required: true }
+});
+
 const saleSchema = mongoose.Schema({
-  product: {
+  customerName: {
     type: String,
-    required: [true, "Favor de incluir el producto vendido"]
+    required: [true, 'Favor de incluir el nombre del cliente']
   },
-  amount: {
-    type: Number, 
-    required: [true, "Favor de incluir la cantidad de producto"]
+  shippingAddress: {
+    type: String,
+    required: [true, 'Favor de incluir la dirección de envío']
   },
+  items: [itemSchema],
   totalPrice: {
     type: Number,
     required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
-})
+});
 
 module.exports = mongoose.model('Sale', saleSchema);
